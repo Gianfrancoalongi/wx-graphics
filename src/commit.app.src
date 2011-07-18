@@ -1,0 +1,12 @@
+{application, commit,
+ [
+  {description, "Commit Visualization Application"},
+  {vsn, "0.1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, {graphics_app,[]}},
+  {env, []}
+ ]}.
