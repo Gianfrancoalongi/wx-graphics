@@ -1,0 +1,7 @@
+
+
+Neeed a way to collect the sprites
+from a sprite-sheet and return an animation
+series which has the BASE_OF_THE_IMAGE at a 
+specific point.
+
