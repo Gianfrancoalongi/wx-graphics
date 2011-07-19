@@ -9,7 +9,8 @@
 
 %% API
 -export([start_link/0]).
--export([add_to_paint_screen/4]).
+-export([add_to_paint_screen/4,
+	 remove_from_paint_screen/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -28,6 +29,10 @@ start_link() ->
 add_to_paint_screen(Layer,Id,Position,WxBitmap) ->    
     ets:insert(sprites,{{Layer,Id},Position,WxBitmap}),
     ok.
+
+-spec(remove_from_paint_screen(integer(),term()) -> ok).	     
+remove_from_paint_screen(Layer,Id) ->
+    ets:delete(sprites,{Layer,Id}).
 
 %%%===================================================================
 %%% gen_server callbacks

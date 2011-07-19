@@ -1,6 +1,5 @@
 -module(sprite_lib).
 -include("animation.hrl").
--include_lib("wx/include/wx.hrl").
 -export([get_animations/2]).
 -export([get_frames/2]).
 

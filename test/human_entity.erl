@@ -6,7 +6,6 @@
 -module(human_entity).
 -behaviour(gen_server).
 -include("animation.hrl").
--include_lib("wx/include/wx.hrl").
 
 %% API
 -export([add_to_graphics/1]).
