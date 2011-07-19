@@ -9,6 +9,7 @@
 
 %% API
 -export([start_link/0]).
+-export([add_to_paint_screen/4]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -21,6 +22,12 @@
 %%%===================================================================
 start_link() ->
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+
+-spec(add_to_paint_screen(integer(),term(),{integer(),integer()},#wx{}) ->
+	     ok).
+add_to_paint_screen(Layer,Id,Position,WxBitmap) ->    
+    ets:insert(sprites,{{Layer,Id},Position,WxBitmap}),
+    ok.
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -47,7 +54,7 @@ handle_info(redraw, #state{canvas = Canvas} = State) ->
     MemoryDC = wxMemoryDC:new(BitMap),
     wxDC:clear(MemoryDC),
     ets:foldl(
-      fun({_Key,_Id,FramePos,Frame},_) ->
+      fun({{_Key,_Id},FramePos,Frame},_) ->
 	      FrameDimensions = {wxBitmap:getWidth(Frame),wxBitmap:getHeight(Frame)},
 	      case is_visible(ViewScreenPos,
 			      ViewScreenDimensions,

@@ -4,6 +4,7 @@
 -export([get_animations/2]).
 -export([get_frames/2]).
 
+-spec(get_animations(string(),[{atom(),term()}]) -> [#animation{}]).	     
 get_animations(FileName,Options) ->
     Side = proplists:get_value(square,Options),
     Rows = proplists:get_value(rows,Options),
@@ -27,7 +28,7 @@ get_animations(SpriteFile,SquareSize,Rows,Columns) ->
     wxImage:destroy(Img),
     Anims.
 
-
+-spec(get_frames(string(),[{integer(),integer(),integer(),integer()}]) -> [#wx{}]).
 get_frames(FileName,Areas) ->
     Img = wxImage:new(FileName),
     BitMap = wxBitmap:new(Img),

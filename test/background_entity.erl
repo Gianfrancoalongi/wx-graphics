@@ -3,12 +3,13 @@
 %%% @copyright (C) 2011, Gianfranco
 %%% Created : 12 Jul 2011 by Gianfranco <zenon@zen.local>
 %%%-------------------------------------------------------------------
--module(backround_entity).
+-module(background_entity).
 -behaviour(gen_server).
 -include("animation.hrl").
 -include_lib("wx/include/wx.hrl").
 
 %% API
+-export([add_to_graphics/0]).
 -export([start_link/2]).
 
 %% gen_server callbacks
@@ -26,9 +27,13 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+add_to_graphics() ->
+    entity_sup:start_entity(?MODULE,[background]).
+
 start_link(WxEnv,Id) ->
-    gen_server:start_link({local,Id}, ?MODULE, 
-			  {WxEnv,"./priv/Misc/megaman.gif",Id}, []).
+    Priv = code:priv_dir(graphics),
+    Path = filename:join([Priv,"Misc","megaman.gif"]),
+    gen_server:start_link({local,Id}, ?MODULE, {WxEnv,Path,Id},[]).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -74,7 +79,7 @@ animate(#entity{x_pos = X,y_pos = Y,id = Id} = State,
 		   offset_y_per_frame = Yd
 		  } = Animation) ->
     NewPos = {X + Xd,Y + Yd},
-    ets:insert(sprites,{100,Id,NewPos,Frame}),
+    paint_screen:add_to_paint_screen(0,Id,NewPos,Frame),
     timer:sleep(FramePause),
     animate(State#entity{x_pos = X + Xd,
 			 y_pos = Y + Yd},

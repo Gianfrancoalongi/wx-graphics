@@ -19,10 +19,10 @@
 start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
+-spec(start_entity(atom(),[term()]) -> ok).	     
 start_entity(Module,Arguments) ->
     supervisor:start_child(?MODULE,[Module|Arguments]).
     
-
 %%%===================================================================
 %%% Supervisor callbacks
 %%%===================================================================

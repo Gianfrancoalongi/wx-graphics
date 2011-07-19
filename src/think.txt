@@ -1,0 +1,69 @@
+
+
+	          ~~~ ===== IN GENERAL ===== ~~~
+
+          0 0--------------------------------------------------> {x} 
+          |
+	  |   ------------------------------
+	  |  |    	                   |---------------
+	  |  |			           |		   |
+	  |  |	VIEW SCREEN		   |		   |
+	  |  |				   |		   |
+	  |   -----------------------------		   |
+	  |  |						   |
+	  |  |     PAINT SCREEN				   |
+	  |  |                        ~O~		   |
+	  |  |                         /\  SPRITE          |
+	  |  |---------------------------------------------
+	  |
+	  V
+	 {y}
+
+	 |0001|
+	 |1011|
+	 |2021|
+	 
+
+--------------------------------------------------------------------------------
+
+		 ~~~~===== DEPTH ===== ~~~~
+
+
+	   ----------------------------
+          /				LAYER N
+         / 
+        |-------------------------------
+PAINT   |				LAYER 2
+SCREEN	|-------------------------------
+LAYERS	|				LAYER 1
+	|-------------------------------
+	|				LAYER 0 (must always only be one entity here)
+         -------------------------------
+
+--------------------------------------------------------------------------------
+		 ~~~~===== SPRITES =====~~~~
+
+  One process for each separate object which might cycle sprites
+  to create an animation.
+
+  Whenever this process wishes to push a sprite-frame onto the
+  paint screen, it does so via a sprite-buffer.
+  In addition, you must specify 
+
+     * LAYER in which "depth" this sprite-frame will go. (any layer > 0)
+     * COORDINATES which coordinates (in the Paint screen coordinate space)
+     * ID which was given from Paint Screen when initializing this process
+     
+     SPRITE ------> SPRITE-BUFFER [ LAYER, SPRITE, COORDINATES ] 
+
+  
+-------------------------------------------------------------------------------- 
+           ~~~~==== PAINT SCREEN RENDERING =====~~~~~
+	 
+  Paint screen process
+
+  * Knows the bounding box of the view screen in relation
+    to Paint screen
+
+  * Traverses the "paint buffer", puts them into one bitmap
+    and puts the bitmap to the view screen.

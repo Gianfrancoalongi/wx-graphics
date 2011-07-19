@@ -46,9 +46,12 @@ move(Dir) ->
 %%% gen_server callbacks
 %%%===================================================================
 init([]) ->
-    {ok, #state{canvas = make_window({100,100}),
-		x_pos = 0,
-		y_pos = 0
+    {ok,Size} = application:get_env(graphics,view_screen_size),
+    {ok,{X,Y}} = application:get_env(graphics,view_screen_pos),
+    {ok,TitleStr} = application:get_env(graphics,view_screen_title),
+    {ok, #state{canvas = make_window(TitleStr,Size),
+		x_pos = X,
+		y_pos = Y
 	       }}.
 
 handle_call(get_canvas, _, State) ->    
@@ -81,9 +84,9 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-make_window(Dimensions) ->
+make_window(TitleStr, Dimensions) ->
     Server = wx:new(),
-    Frame = wxFrame:new(Server, -1, "View Screen", [{size,Dimensions}]),
+    Frame = wxFrame:new(Server, -1, TitleStr, [{size,Dimensions}]),
     Canvas  = wxPanel:new(Frame),
     wxFrame:show(Frame),
     Canvas.

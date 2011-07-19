@@ -1,12 +1,12 @@
-{application, commit,
+{application, graphics,
  [
-  {description, "Commit Visualization Application"},
+  {description, "Sprite Graphics App"},
   {vsn, "0.1"},
   {registered, []},
   {applications, [
                   kernel,
-                  stdlib
-                 ]},
+                  stdlib	
+                 ]},		
   {mod, {graphics_app,[]}},
   {env, []}
  ]}.
