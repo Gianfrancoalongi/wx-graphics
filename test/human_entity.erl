@@ -55,11 +55,11 @@ init({WxEnv,SpritePath,Id}) ->
 						     [{square,32},
 						      {rows,4},
 						      {columns,3}]),
-    Animations = [ X#animation{frame_pauses = 100}
-		   || X <-[Up#animation{offset_y_per_frame = -5},
-			   Left#animation{offset_x_per_frame = -5},
-			   Right#animation{offset_x_per_frame = 5},
-			   Down#animation{offset_y_per_frame = 5}]],
+    Animations = [ sprite_lib:y_move_per_frame(Down,5),
+		   sprite_lib:y_move_per_frame(Up,-5),
+		   sprite_lib:x_move_per_frame(Right,5),
+		   sprite_lib:x_move_per_frame(Left,-5)
+		 ],
     Bindings = [up,left,right,down],
     {ok, #entity{animations = lists:zip(Bindings,Animations),
 		 id = Id,
@@ -107,14 +107,14 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 animate(State,#animation{frames = []}) -> State;
 animate(#entity{x_pos = X,y_pos = Y,id = Id} = State,
-	#animation{frames = [Frame|Frames],
-		   frame_pauses = FramePause,
-		   offset_x_per_frame = Xd,
-		   offset_y_per_frame = Yd
-		  } = Animation) ->
+	#animation{frames = [Frame|Frames]} = Animation) ->
+    #frame{bitmap = BitMap,
+	   x_move = Xd,
+	   y_move = Yd,
+	   frame_pause = Pause} = Frame,
     NewPos = {X + Xd,Y + Yd},
-    paint_screen:add_to_paint_screen(2,Id,NewPos,Frame),
-    timer:sleep(FramePause),
+    paint_screen:add_to_paint_screen(2,Id,NewPos,BitMap),
+    timer:sleep(Pause),
     animate(State#entity{x_pos = X + Xd,
 			 y_pos = Y + Yd},
 	    Animation#animation{frames=Frames}).

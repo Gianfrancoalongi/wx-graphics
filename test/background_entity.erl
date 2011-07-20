@@ -40,11 +40,7 @@ start_link(WxEnv,Id) ->
 init({WxEnv,SpritePath,Id}) ->
     wx:set_env(WxEnv),
     [Bg] = sprite_lib:get_frames(SpritePath,[{0,0,981,690}]),
-    Animation = #animation{frames = [Bg],
-			   frame_pauses = 1000,
-			   offset_x_per_frame = 0,
-			   offset_y_per_frame = 0
-			  },
+    Animation = #animation{frames = [Bg#frame{frame_pause = 1000}]},
     State = #entity{animations = [Animation],
 		    id = Id,
 		    x_pos = 0,
@@ -72,14 +68,14 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 animate(State,#animation{frames = []}) -> State;
 animate(#entity{x_pos = X,y_pos = Y,id = Id} = State,
-	#animation{frames = [Frame|Frames],
-		   frame_pauses = FramePause,
-		   offset_x_per_frame = Xd,
-		   offset_y_per_frame = Yd
-		  } = Animation) ->
+	#animation{frames = [Frame|Frames]} = Animation) ->
+    #frame{bitmap = BitMap,
+	   x_move = Xd,
+	   y_move = Yd,
+	   frame_pause = Pause} = Frame,
     NewPos = {X + Xd,Y + Yd},
-    paint_screen:add_to_paint_screen(0,Id,NewPos,Frame),
-    timer:sleep(FramePause),
+    paint_screen:add_to_paint_screen(0,Id,NewPos,BitMap),
+    timer:sleep(Pause),
     animate(State#entity{x_pos = X + Xd,
 			 y_pos = Y + Yd},
 	    Animation#animation{frames=Frames}).

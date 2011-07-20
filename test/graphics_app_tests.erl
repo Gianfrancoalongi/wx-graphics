@@ -1,6 +1,6 @@
 -module(graphics_app_tests).
 -include_lib("eunit/include/eunit.hrl").
-
+-include("animation.hrl").
 
 basic_empty_starts_test_() ->
     {timeout,
@@ -26,21 +26,20 @@ basic_adds_to_paint_screen_removes_test_() ->
 	     application:set_env(graphics,view_screen_pos,{0,0}),
 	     application:set_env(graphics,paint_screen_update_pause,10),
 	     application:start(graphics),
-
+	     
 	     WxEnv = view_screen:get_wxenv(),
 	     wx:set_env(WxEnv),
 	     [Ouch_Man] = sprite_lib:get_frames(filename:join([code:priv_dir(graphics),
 							       "Misc","megaman.gif"]),
 						[{15,560,46,46}]),
-	     paint_screen:add_to_paint_screen(1,ouch1,{0,0},Ouch_Man),
-	     paint_screen:add_to_paint_screen(1,ouch2,{46,0},Ouch_Man),
-	     paint_screen:add_to_paint_screen(1,ouch3,{46*2,0},Ouch_Man),
-	     paint_screen:add_to_paint_screen(1,ouch4,{46*3,0},Ouch_Man),
+	     paint_screen:add_to_paint_screen(1,ouch1,{0,0},Ouch_Man#frame.bitmap),
+	     paint_screen:add_to_paint_screen(1,ouch2,{46,0},Ouch_Man#frame.bitmap),
+	     paint_screen:add_to_paint_screen(1,ouch3,{46*2,0},Ouch_Man#frame.bitmap),
+	     paint_screen:add_to_paint_screen(1,ouch4,{46*3,0},Ouch_Man#frame.bitmap),
 	     timer:sleep(2000),
 	     paint_screen:remove_from_paint_screen(1,ouch1),
 	     paint_screen:remove_from_paint_screen(1,ouch3),
-	     timer:sleep(2000),
-	     
+	     timer:sleep(2000),	     
 	     application:stop(graphics),
 	     application:unload(graphics)
      end

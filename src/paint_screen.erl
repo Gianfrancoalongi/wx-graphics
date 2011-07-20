@@ -5,7 +5,7 @@
 %%%-------------------------------------------------------------------
 -module(paint_screen).
 -behaviour(gen_server).
--include_lib("wx/include/wx.hrl").
+-include_lib("animation.hrl").
 
 %% API
 -export([start_link/0]).
@@ -24,8 +24,7 @@
 start_link() ->
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
--spec(add_to_paint_screen(integer(),term(),{integer(),integer()},#wx{}) ->
-	     ok).
+-spec(add_to_paint_screen(integer(),term(),point(),#wx{}) -> ok).
 add_to_paint_screen(Layer,Id,Position,WxBitmap) ->    
     ets:insert(sprites,{{Layer,Id},Position,WxBitmap}),
     ok.
