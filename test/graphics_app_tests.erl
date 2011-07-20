@@ -94,40 +94,77 @@ basic_moving_entity_fixed_view_screen_test_() ->
 	     application:unload(graphics)
      end}.
 
-%% base_of_sprite_frame_is_at_fix_position_with_rendering_offset_test_() ->
-%%     {timeout,
-%%      10,
-%%      fun() ->
-%% 	     application:load(graphics),
-%% 	     application:set_env(graphics,view_screen_title,"Base of sprite is offset by rendering offset"),
-%% 	     application:set_env(graphics,view_screen_size,{500,150}),
-%% 	     application:set_env(graphics,view_screen_pos,{0,0}),
-%% 	     application:set_env(graphics,paint_screen_update_pause,10),
-%% 	     application:start(graphics),
-	     
-%% 	     WxEnv = view_screen:get_wxenv(),
-%% 	     wx:set_env(WxEnv),
-%% 	     BitMaps= sprite_lib:get_frames(filename:join([code:priv_dir(graphics),
-%% 							   "Misc","megaman.gif"]),
-%% 					    [{4,4,6,155},
-%% 					     {17,17,10,138},
-%% 					     {35,35,10,120},
-%% 					     {48,52,10,106},
-%% 					     {67,67,10,88},
-%% 					     {83,83,10,73},
-%% 					     {100,100,10,56},
-%% 					     {114,107,12,50},
-%% 					     {134,116,18,40},
-%% 					     {157,124,32,34},
-%% 					     {196,130,32,35}]),
-
-%% 	     Animation = sprite_lib:align_frames({bottom,150},
-	     
-
-%% 	     timer:sleep(6000),
-%% 	     application:stop(graphics),
-%% 	     application:unload(graphics)
-%%      end}.	     
+rendering_offset_to_put_base_of_frames_on_same_spot_test_() ->
+    {timeout,
+     30,
+     fun() ->
+	     application:load(graphics),
+	     application:set_env(graphics,view_screen_title,"Sprite offset"),
+	     application:set_env(graphics,view_screen_size,{200,120}),
+	     application:set_env(graphics,view_screen_pos,{0,0}),
+	     application:set_env(graphics,paint_screen_update_pause,10),
+	     application:start(graphics),	     
+	     WxEnv = view_screen:get_wxenv(),
+	     wx:set_env(WxEnv),
+	     Frames = sprite_lib:get_frames(filename:join([code:priv_dir(graphics),
+							   "Misc","megaman.gif"]),
+					    [{5,5,2,152},
+					     {20,21,4,137},
+					     {34,37,8,120},
+					     {50,53,8,104},
+					     {66,69,8,88},
+					     {83,85,8,72},
+					     {99,101,8,56},
+					     {116,109,10,48},
+					     {135,114,16,40},
+					     {158,124,30,32},
+					     {196,132,32,24},
+					     {234,132,36,22},
+					     {281,130,48,25},
+					     {336,122,63,27},
+					     {402,122,64,31},
+					     {473,130,64,31},					     
+					     {544,132,65,30},
+					     {7,205,33,24},
+					     {53,199,30,31},
+					     {89,194,29,36},
+					     {124,187,25,44},
+					     {165,181,24,49},
+					     {193,181,24,48},
+					     {228,179,24,49},
+					     {261,178,24,49},
+					     {297,179,24,49},
+					     {329,179,24,49},
+					     {363,180,24,49},
+					     {398,181,24,48},
+					     {436,185,29,44},
+					     {470,189,31,40},
+					     {510,192,35,38},
+					     {7,247,32,41}
+					    ]),
+	     PointX = 50,
+	     PointY = 0,
+	     ReferencePoint = {PointX,PointY},
+	     Adjusted = sprite_lib:frame_paint_offset_aligned(ReferencePoint,
+							      [{bottom,100},
+							       {centered_horizontally,PointX}],
+							      Frames),
+	     Run = fun() ->
+			   lists:foreach(
+			     fun(Frame) ->
+				     #frame{bitmap = BitMap,
+					    x_paint_offset = XpO,
+					    y_paint_offset = YpO} = Frame,
+				     NewPoint = {PointX + XpO, PointY+YpO},
+				     paint_screen:add_to_paint_screen(1,coming_in,NewPoint,BitMap),
+				     timer:sleep(80)
+			     end,Adjusted)
+		   end,
+	     Run(),
+	     timer:sleep(4000),
+	     application:stop(graphics),
+	     application:unload(graphics)
+     end}.
 
     
 
