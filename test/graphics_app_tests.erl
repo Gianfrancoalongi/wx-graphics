@@ -170,6 +170,7 @@ resize_sprites_test_() ->
      end}.
 
 start_graphics(Title,Dimensions,ViewScreenPosition,PaintScreenPause) ->
+    application:start(wx),
     application:load(graphics),
     application:set_env(graphics,view_screen_title,Title),
     application:set_env(graphics,view_screen_size,Dimensions),
@@ -179,5 +180,6 @@ start_graphics(Title,Dimensions,ViewScreenPosition,PaintScreenPause) ->
 
 stop_graphics() ->
     application:stop(graphics),
-    application:unload(graphics).
+    application:unload(graphics),
+    application:stop(wx).
 
