@@ -29,7 +29,7 @@ add_to_paint_screen(Layer,Id,Position,WxBitmap) ->
     ets:insert(sprites,{{Layer,Id},Position,WxBitmap}),
     ok.
 
--spec(remove_from_paint_screen(integer(),term()) -> ok).	     
+-spec(remove_from_paint_screen(integer(),term()) -> true).
 remove_from_paint_screen(Layer,Id) ->
     ets:delete(sprites,{Layer,Id}).
 

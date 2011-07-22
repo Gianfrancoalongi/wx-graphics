@@ -5,6 +5,7 @@
 -export([x_move_per_frame/2,
 	 y_move_per_frame/2]).
 -export([frame_paint_offset_aligned/3]).
+-export([resize_keep_ratio/3]).
 
 -spec(get_animations(string(),[{atom(),term()}]) -> [#animation{}]). 
 get_animations(FileName,Options) ->
@@ -80,3 +81,16 @@ frame_paint_offset_aligned({XRef,_}=Point,[{centered_horizontally,MidX}|R],Frame
     frame_paint_offset_aligned(Point,R,NewFrames).
 			  
 
+-spec(resize_keep_ratio(enlarge,{factor,integer()},[#frame{}]) -> ok).
+resize_keep_ratio(enlarge,{factor,N},Frames) ->
+    lists:foreach(
+      fun(#frame{bitmap = BitMap}) ->
+	      Height = wxBitmap:getHeight(BitMap),
+	      Width = wxBitmap:getWidth(BitMap),
+	      Ratio = Height / Width,
+	      NewHeight = Height * N,
+	      NewWidth = NewHeight / Ratio,
+	      wxBitmap:setHeight(BitMap,round(NewHeight)),
+	      wxBitmap:setWidth(BitMap,round(NewWidth))
+      end,Frames),
+    ok.

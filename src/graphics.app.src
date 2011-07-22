@@ -5,8 +5,13 @@
   {registered, []},
   {applications, [
                   kernel,
-                  stdlib	
+                  stdlib,
+		  wx
                  ]},		
   {mod, {graphics_app,[]}},
-  {env, []}
+  {env, [{view_screen_title,"Standard View Screen"},
+	 {view_screen_size,{200,200}},
+	 {view_screen_pos,{0,0}},
+	 {paint_screen_update_pause,10}
+	]}
  ]}.
