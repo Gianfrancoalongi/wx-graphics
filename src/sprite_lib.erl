@@ -6,6 +6,7 @@
 	 y_move_per_frame/2]).
 -export([frame_paint_offset_aligned/3]).
 -export([resize_keep_ratio/3]).
+-export([rotate_frames/4]).
 
 -spec(get_animations(string(),[{atom(),term()}]) -> [#animation{}]). 
 get_animations(FileName,Options) ->
@@ -94,3 +95,24 @@ resize_keep_ratio(enlarge,{factor,N},Frames) ->
 	      wxBitmap:setWidth(BitMap,round(NewWidth))
       end,Frames),
     ok.
+
+-spec(rotate_frames([#frame{}],{integer(),integer()},float(),sequence|fixed) -> [#frame{}]).
+rotate_frames(Frames,CoR,Radians,Mode) ->
+    lists:map(
+      fun({Frame,SeqInt}) ->
+	      #frame{bitmap = BitMap} = Frame,
+	      WxImg = wxBitmap:convertToImage(BitMap),
+	      wxBitmap:destroy(BitMap),
+	      CalcRadians = case Mode of
+				fixed ->
+				    Radians;
+				sequence ->
+				    Radians*SeqInt
+			    end,
+	      Res = wxImage:rotate(WxImg,CalcRadians,CoR),
+	      wxImage:destroy(WxImg),
+	      Frame#frame{bitmap = Res}
+      end,
+      lists:zip(Frames,lists:seq(1,length(Frames)))).
+		      
+		      

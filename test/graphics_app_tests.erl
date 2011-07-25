@@ -36,135 +36,162 @@
 			 {7,247,32,41}
 			]).
 
-basic_empty_starts_test_() ->
-    {timeout,
-     10,
-     fun() ->
-	     start_graphics("Blank Demo",{200,100},{0,0},10),
-	     timer:sleep(3000),
-	     stop_graphics()
-     end}.
+%% basic_empty_starts_test_() ->
+%%     {timeout,
+%%      10,
+%%      fun() ->
+%% 	     start_graphics("Blank Demo",{200,100},{0,0},10),
+%% 	     timer:sleep(3000),
+%% 	     stop_graphics()
+%%      end}.
 
-basic_adds_to_paint_screen_removes_test_() ->
-    {timeout,10,
-     fun() ->
-	     start_graphics("Add-Remove from Paint Screen",{400,60},{0,0},10),
-	     WxEnv = view_screen:get_wxenv(),
-	     wx:set_env(WxEnv),
-	     [Ouch_Man] = sprite_lib:get_frames(filename:join([code:priv_dir(graphics),
-							       "Misc","megaman.gif"]),
-						[{15,560,46,46}]),
-	     paint_screen:add_to_paint_screen(1,ouch1,{0,0},Ouch_Man#frame.bitmap),
-	     paint_screen:add_to_paint_screen(1,ouch2,{46,0},Ouch_Man#frame.bitmap),
-	     paint_screen:add_to_paint_screen(1,ouch3,{46*2,0},Ouch_Man#frame.bitmap),
-	     paint_screen:add_to_paint_screen(1,ouch4,{46*3,0},Ouch_Man#frame.bitmap),
-	     timer:sleep(2000),
-	     paint_screen:remove_from_paint_screen(1,ouch1),
-	     paint_screen:remove_from_paint_screen(1,ouch3),
-	     timer:sleep(2000),	     
-	     stop_graphics()
-     end
-    }.
+%% basic_adds_to_paint_screen_removes_test_() ->
+%%     {timeout,10,
+%%      fun() ->
+%% 	     start_graphics("Add-Remove from Paint Screen",{400,60},{0,0},10),
 
-basic_background_with_view_screen_move_test_() ->
-    {timeout,
-     10,
-     fun() ->
-	     start_graphics("Moving View Screen over Megaman Background",
-			    {400,200},{100,200},10),
-	     background_entity:add_to_graphics(),
-	     Dirs = [up,down,right,left],
-	     Move = fun() -> lists:nth(random:uniform(length(Dirs)),Dirs) end,
-	     Moves = [Move()|| _ <- lists:seq(1,10)],
-	     Prolonged = lists:flatten([string:copies([M],5)||M<-Moves]),
-	     lists:map(
-	       fun(Direction) ->
-		       view_screen:move(Direction),
-		       timer:sleep(100)
-	       end,Prolonged),
-	     stop_graphics()
-     end}.
+%% 	     [Ouch_Man] = sprite_lib:get_frames(filename:join([code:priv_dir(graphics),
+%% 							       "Misc","megaman.gif"]),
+%% 						[{15,560,46,46}]),
 
-basic_moving_entity_fixed_view_screen_test_() ->    
-    {timeout,
-     10,
-     fun() ->
-	     start_graphics("Fixed View Screen - Moving Entities on Paint Screen",
-			   {500,150},{0,0},10),
-	     human_entity:add_to_graphics(h1),
-	     human_entity:add_to_graphics(h2),
-	     human_entity:add_to_graphics(h3),
-	     human_entity:add_to_graphics(h4),
-	     human_entity:add_to_graphics(h5),
-	     human_entity:wander(h1,{0,500}),
-	     human_entity:wander(h2,{0,500}),
-	     human_entity:wander(h3,{0,500}),	     
-	     human_entity:wander(h4,{0,500}), 
-	     human_entity:wander(h5,{0,500}), 
-	     timer:sleep(6000),
-	     stop_graphics()
-     end}.
+%% 	     paint_screen:add_to_paint_screen(1,ouch1,{0,0},Ouch_Man#frame.bitmap),
+%% 	     paint_screen:add_to_paint_screen(1,ouch2,{46,0},Ouch_Man#frame.bitmap),
+%% 	     paint_screen:add_to_paint_screen(1,ouch3,{46*2,0},Ouch_Man#frame.bitmap),
+%% 	     paint_screen:add_to_paint_screen(1,ouch4,{46*3,0},Ouch_Man#frame.bitmap),
 
-rendering_offset_to_put_base_of_frames_on_same_spot_test_() ->
+%% 	     timer:sleep(2000),
+
+%% 	     paint_screen:remove_from_paint_screen(1,ouch1),
+%% 	     paint_screen:remove_from_paint_screen(1,ouch3),
+
+%% 	     timer:sleep(2000),	     
+%% 	     stop_graphics()
+%%      end
+%%     }.
+
+%% basic_background_with_view_screen_move_test_() ->
+%%     {timeout,
+%%      10,
+%%      fun() ->
+%% 	     start_graphics("Moving View Screen over Megaman Background",
+%% 			    {400,200},{100,200},10),
+%% 	     background_entity:add_to_graphics(),
+%% 	     Dirs = [up,down,right,left],
+%% 	     Move = fun() -> lists:nth(random:uniform(length(Dirs)),Dirs) end,
+%% 	     Moves = [Move()|| _ <- lists:seq(1,10)],
+%% 	     Prolonged = lists:flatten([string:copies([M],5)||M<-Moves]),
+%% 	     lists:map(
+%% 	       fun(Direction) ->
+%% 		       view_screen:move(Direction),
+%% 		       timer:sleep(100)
+%% 	       end,Prolonged),
+%% 	     stop_graphics()
+%%      end}.
+
+%% basic_moving_entity_fixed_view_screen_test_() ->    
+%%     {timeout,
+%%      10,
+%%      fun() ->
+%% 	     start_graphics("Fixed View Screen - Moving Entities on Paint Screen",
+%% 			   {500,150},{0,0},10),
+%% 	     human_entity:add_to_graphics(h1),
+%% 	     human_entity:add_to_graphics(h2),
+%% 	     human_entity:add_to_graphics(h3),
+%% 	     human_entity:add_to_graphics(h4),
+%% 	     human_entity:add_to_graphics(h5),
+%% 	     human_entity:wander(h1,{0,500}),
+%% 	     human_entity:wander(h2,{0,500}),
+%% 	     human_entity:wander(h3,{0,500}),	     
+%% 	     human_entity:wander(h4,{0,500}), 
+%% 	     human_entity:wander(h5,{0,500}), 
+%% 	     timer:sleep(6000),
+%% 	     stop_graphics()
+%%      end}.
+
+%% rendering_offset_to_put_base_of_frames_on_same_spot_test_() ->
+%%     {timeout,
+%%      30,
+%%      fun() ->
+%% 	     start_graphics("Sprite offset",{200,120},{0,0},10),
+%% 	     Frames = sprite_lib:get_frames(filename:join([code:priv_dir(graphics),
+%% 							   "Misc","megaman.gif"]),
+%% 					    ?START_ANIMATION),
+%% 	     PointX = 50,
+%% 	     PointY = 0,
+%% 	     ReferencePoint = {PointX,PointY},
+%% 	     Adjusted = sprite_lib:frame_paint_offset_aligned(ReferencePoint,
+%% 							      [{bottom,100},
+%% 							       {centered_horizontally,PointX}],
+%% 							      Frames),
+%% 	     lists:foreach(
+%% 	       fun(Frame) ->
+%% 		       #frame{bitmap = BitMap,
+%% 			      x_paint_offset = XpO,
+%% 			      y_paint_offset = YpO} = Frame,
+%% 		       NewPoint = {PointX + XpO, PointY+YpO},
+%% 		       paint_screen:add_to_paint_screen(1,coming_in,NewPoint,BitMap),
+%% 		       timer:sleep(80)
+%% 	       end,Adjusted),
+%% 	     timer:sleep(4000),
+%% 	     stop_graphics()
+%%      end}.
+
+%% resize_sprites_test_() ->
+%%     {timeout,
+%%      30,
+%%      fun() ->
+%% 	     start_graphics("Offset + Scaled x 3",{200,200},{0,0},10),
+%% 	     Frames = sprite_lib:get_frames(filename:join([code:priv_dir(graphics),
+%% 							   "Misc","megaman.gif"]),
+%% 					    ?START_ANIMATION),
+
+%% 	     sprite_lib:resize_keep_ratio(enlarge,{factor,3},Frames),
+
+%% 	     PointX = 50,
+%% 	     PointY = 0,
+%% 	     ReferencePoint = {PointX,PointY},
+%% 	     Adjusted = sprite_lib:frame_paint_offset_aligned(ReferencePoint,
+%% 							      [{bottom,180},
+%% 							       {centered_horizontally,PointX}],
+%% 							      Frames),
+%% 	     lists:foreach(
+%% 	       fun(Frame) ->
+%% 		       #frame{bitmap = BitMap,
+%% 			      x_paint_offset = XpO,
+%% 			      y_paint_offset = YpO} = Frame,
+%% 		       NewPoint = {PointX + XpO, PointY+YpO},
+%% 				     paint_screen:add_to_paint_screen(1,coming_in,NewPoint,BitMap),
+%% 		       timer:sleep(80)
+%% 	       end,Adjusted),
+%% 	     timer:sleep(4000),
+%% 	     stop_graphics()
+%%     end}.
+
+rotate_frames_test_() ->
     {timeout,
      30,
      fun() ->
-	     start_graphics("Sprite offset",{200,120},{0,0},10),
-	     WxEnv = view_screen:get_wxenv(),
-	     wx:set_env(WxEnv),
-	     Frames = sprite_lib:get_frames(filename:join([code:priv_dir(graphics),
-							   "Misc","megaman.gif"]),
-					    ?START_ANIMATION),
-	     PointX = 50,
-	     PointY = 0,
-	     ReferencePoint = {PointX,PointY},
-	     Adjusted = sprite_lib:frame_paint_offset_aligned(ReferencePoint,
-							      [{bottom,100},
-							       {centered_horizontally,PointX}],
-							      Frames),
+	     start_graphics("Frames rotated",{200,200},{0,0},10),	     
+	     [_,_,Right,_] = sprite_lib:get_animations(filename:join([code:priv_dir(graphics),
+								      "Guys",
+								      "guy_1.png"]),
+						       [{square,32},
+							{rows,4},
+							{columns,3}]),
+	     Point = {50,0},
+	     Point2= {100,0},
+	     Frames = Right#animation.frames,
+	     RotatedSequence = sprite_lib:rotate_frames(Frames,Point,3.14/8,sequence),
+	     RotateFix = sprite_lib:rotate_frames(Frames,Point2,3.14/8,fixed),
+	     
 	     lists:foreach(
-	       fun(Frame) ->
-		       #frame{bitmap = BitMap,
-			      x_paint_offset = XpO,
-			      y_paint_offset = YpO} = Frame,
-		       NewPoint = {PointX + XpO, PointY+YpO},
-		       paint_screen:add_to_paint_screen(1,coming_in,NewPoint,BitMap),
+	       fun({SeqFrame,FixFrame}) ->
+		       #frame{bitmap = SeqBitMap} = SeqFrame,
+		       #frame{bitmap = FixBitMap} = FixFrame,		       
+		       paint_screen:add_to_paint_screen(1,fixed,Point,FixBitMap),
+		       paint_screen:add_to_paint_screen(1,rotated,Point2,SeqBitMap),
 		       timer:sleep(80)
-	       end,Adjusted),
-	     timer:sleep(4000),
-	     stop_graphics()
-     end}.
-
-resize_sprites_test_() ->
-    {timeout,
-     30,
-     fun() ->
-	     start_graphics("Offset + Scaled x 3",{200,200},{0,0},10),
-
-	     WxEnv = view_screen:get_wxenv(),
-	     wx:set_env(WxEnv),
-	     Frames = sprite_lib:get_frames(filename:join([code:priv_dir(graphics),
-							   "Misc","megaman.gif"]),
-					    ?START_ANIMATION),
-
-	     sprite_lib:resize_keep_ratio(enlarge,{factor,3},Frames),
-
-	     PointX = 50,
-	     PointY = 0,
-	     ReferencePoint = {PointX,PointY},
-	     Adjusted = sprite_lib:frame_paint_offset_aligned(ReferencePoint,
-							      [{bottom,180},
-							       {centered_horizontally,PointX}],
-							      Frames),
-	     lists:foreach(
-	       fun(Frame) ->
-		       #frame{bitmap = BitMap,
-			      x_paint_offset = XpO,
-			      y_paint_offset = YpO} = Frame,
-		       NewPoint = {PointX + XpO, PointY+YpO},
-				     paint_screen:add_to_paint_screen(1,coming_in,NewPoint,BitMap),
-		       timer:sleep(80)
-	       end,Adjusted),
+	       end,lists:zip(RotatedSequence,RotateFix)),
 	     timer:sleep(4000),
 	     stop_graphics()
      end}.
@@ -176,7 +203,9 @@ start_graphics(Title,Dimensions,ViewScreenPosition,PaintScreenPause) ->
     application:set_env(graphics,view_screen_size,Dimensions),
     application:set_env(graphics,view_screen_pos,ViewScreenPosition),
     application:set_env(graphics,paint_screen_update_pause,PaintScreenPause),
-    application:start(graphics).
+    application:start(graphics),
+    WxEnv = view_screen:get_wxenv(),
+    wx:set_env(WxEnv).
 
 stop_graphics() ->
     application:stop(graphics),
