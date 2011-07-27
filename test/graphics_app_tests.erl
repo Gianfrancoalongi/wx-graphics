@@ -171,8 +171,8 @@ rotate_fixed_frames_test_() ->
     {timeout,
      30,
      fun() ->
-	     Rotate + Enlarge works fine --- not the other way
-	     Don't know why :|
+	     %% 	     Rotate + Enlarge works fine --- not the other way
+	     %% 	     Don't know why :|
 
 	     start_graphics("Rotate + Resize || Sequence <------> Fixed",{400,150},{0,0},10),
 	     Path = filename:join([code:priv_dir(graphics),"Misc","megaman_alpha.png"]),
