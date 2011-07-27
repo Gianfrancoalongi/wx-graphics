@@ -17,7 +17,7 @@ get_animations(FileName,Options) ->
 
 get_animations(SpriteFile,SquareSize,Rows,Columns) ->
     Img = wxImage:new(SpriteFile),
-    BitMap = wxBitmap:new(Img),    
+    BitMap = wxBitmap:new(Img), 
     Anims = [ begin
 		  Frames = [ #frame{bitmap = wxBitmap:getSubBitmap(BitMap,
 								   {Column*SquareSize,
@@ -41,8 +41,15 @@ get_animations(SpriteFile,SquareSize,Rows,Columns) ->
 get_frames(FileName,Areas) ->
     Img = wxImage:new(FileName),
     BitMap = wxBitmap:new(Img),
-    SubBitMaps = [ wxBitmap:getSubBitmap(BitMap,{X,Y,W,H}) || {X,Y,W,H} <- Areas ],    
-    wxBitmap:destroy(BitMap),    
+    SubBitMaps = [ begin
+		       TmpBmp = wxBitmap:getSubBitmap(BitMap,{X,Y,W,H}),
+		       TmpImg = wxBitmap:convertToImage(TmpBmp),
+		       wxBitmap:destroy(TmpBmp),
+		       BM = wxBitmap:new(TmpImg),
+		       wxImage:destroy(TmpImg),
+		       BM
+		   end || {X,Y,W,H} <- Areas ],
+    wxBitmap:destroy(BitMap),
     wxImage:destroy(Img),
     [#frame{bitmap = SubBitMap,
 	    x_paint_offset = 0,
@@ -109,7 +116,8 @@ rotate_frames(Frames,CoR,Radians,Mode) ->
 				sequence ->
 				    Radians*SeqInt
 			    end,
-	      Res = wxImage:rotate(WxImg,CalcRadians,CoR),
+	      TMPImg = wxImage:rotate(WxImg,CalcRadians,CoR),
+	      Res = wxBitmap:new(TMPImg),
 	      wxImage:destroy(WxImg),
 	      Frame#frame{bitmap = Res}
       end,

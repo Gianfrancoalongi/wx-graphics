@@ -31,7 +31,7 @@ add_to_graphics() ->
 
 start_link(WxEnv,Id) ->
     Priv = code:priv_dir(graphics),
-    Path = filename:join([Priv,"Misc","megaman.gif"]),
+    Path = filename:join([Priv,"Misc","megaman.png"]),
     gen_server:start_link({local,Id}, ?MODULE, {WxEnv,Path,Id},[]).
 
 %%%===================================================================
