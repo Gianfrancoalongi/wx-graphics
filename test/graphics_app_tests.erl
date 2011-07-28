@@ -136,9 +136,9 @@ rendering_offset_test_() ->
 			      x_paint_offset = XpO,
 			      y_paint_offset = YpO} = Frame,
 		       NewPoint = {PointX + XpO, PointY+YpO},
-
+		       
 		       paint_screen:add_to_paint_screen(1,bottom_offset,NewPoint,BitMap),
-		       		       
+		       
 		       paint_screen:add_to_paint_screen(1,centered_ver,ReferencePoint2,Frame2),
 		       
 		       timer:sleep(80)
@@ -195,10 +195,8 @@ rotate_fixed_frames_test_() ->
 	     
 	     lists:foreach(
 	       fun({SeqFrame,FixedFrame}) ->
-		       #frame{bitmap = BitMap} = SeqFrame,
-		       #frame{bitmap = BitMap_2} = FixedFrame,
-		       paint_screen:add_to_paint_screen(1,fixed,Point,BitMap),
-		       paint_screen:add_to_paint_screen(1,fixedtwo,Point_2,BitMap_2),
+		       paint_screen:add_to_paint_screen(1,fixed,Point,SeqFrame),
+		       paint_screen:add_to_paint_screen(1,fixedtwo,Point_2,FixedFrame),
 		       timer:sleep(80)
 	       end,lists:zip(Sequence,Fixed)),
 	     
