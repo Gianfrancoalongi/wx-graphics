@@ -74,6 +74,9 @@ handle_info(redraw, #state{canvas = Canvas} = State) ->
 		  true ->		      
 		      NewPos = pos_to_view_screen_pos(ViewScreenPos,
 						      FramePos),
+
+%		      wxDC:drawText(MemoryDC,io_lib:format("~p",[ViewScreenPos]),{0,0}),
+
 		      wxDC:drawBitmap(MemoryDC, Frame, NewPos);
 		  false ->
 		      ignore
