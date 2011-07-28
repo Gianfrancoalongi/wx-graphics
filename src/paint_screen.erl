@@ -24,8 +24,15 @@
 start_link() ->
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
--spec(add_to_paint_screen(integer(),term(),point(),#wx{}) -> ok).
-add_to_paint_screen(Layer,Id,Position,WxBitmap) ->    
+-spec(add_to_paint_screen(integer(),term(),point(),#wx{} | #frame{}) -> ok).
+add_to_paint_screen(Layer,Id,{X,Y},#frame{} = Frame) ->
+    #frame{bitmap = WxBitmap,
+	   x_paint_offset = XpO,
+	   y_paint_offset = YpO} = Frame,
+    Point = {X + XpO,Y + YpO},
+    ets:insert(sprites,{{Layer,Id},Point,WxBitmap}),
+    ok;
+add_to_paint_screen(Layer,Id,Position,WxBitmap) ->
     ets:insert(sprites,{{Layer,Id},Position,WxBitmap}),
     ok.
 

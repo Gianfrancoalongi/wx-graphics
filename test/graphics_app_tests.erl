@@ -108,30 +108,41 @@ basic_moving_entity_fixed_view_screen_test_() ->
 	     stop_graphics()
      end}.
 
-rendering_offset_to_put_base_of_frames_on_same_spot_test_() ->
+rendering_offset_test_() ->
     {timeout,
      30,
      fun() ->
-	     start_graphics("Sprite offset",{200,120},{0,0},10),
-	     Frames = sprite_lib:get_frames(filename:join([code:priv_dir(graphics),
-							   "Misc","megaman_alpha.png"]),
-					    ?START_ANIMATION),
-	     PointX = 50,
+	     start_graphics("Sprite offset",{400,120},{0,0},10),
+	     Path = filename:join([code:priv_dir(graphics),"Misc","megaman_alpha.png"]),
+	     Frames = sprite_lib:get_frames(Path,?START_ANIMATION),
+	     Frames_2 = sprite_lib:get_frames(Path,?START_ANIMATION),
+
+	     PointX = 100,
 	     PointY = 0,
 	     ReferencePoint = {PointX,PointY},
 	     Adjusted = sprite_lib:frame_paint_offset_aligned(ReferencePoint,
 							      [{bottom,100},
 							       {centered_horizontally,PointX}],
 							      Frames),
+	     
+	     ReferencePoint2 = {300,0},
+	     Adjusted2 = sprite_lib:frame_paint_offset_aligned(ReferencePoint2,
+							       [{centered_vertically,60},
+								{centered_horizontally,300}],
+							       Frames_2),
 	     lists:foreach(
-	       fun(Frame) ->
+	       fun({Frame,Frame2}) ->
 		       #frame{bitmap = BitMap,
 			      x_paint_offset = XpO,
 			      y_paint_offset = YpO} = Frame,
 		       NewPoint = {PointX + XpO, PointY+YpO},
-		       paint_screen:add_to_paint_screen(1,coming_in,NewPoint,BitMap),
+
+		       paint_screen:add_to_paint_screen(1,bottom_offset,NewPoint,BitMap),
+		       		       
+		       paint_screen:add_to_paint_screen(1,centered_ver,ReferencePoint2,Frame2),
+		       
 		       timer:sleep(80)
-	       end,Adjusted),
+	       end,lists:zip(Adjusted,Adjusted2)),
 	     timer:sleep(4000),
 	     stop_graphics()
      end}.

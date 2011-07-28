@@ -86,7 +86,16 @@ frame_paint_offset_aligned({XRef,_}=Point,[{centered_horizontally,MidX}|R],Frame
 			  Diff = round(MidX - (XRef + (Width/2))),
 			  Frame#frame{x_paint_offset = Diff}
 		  end,Frames),
+    frame_paint_offset_aligned(Point,R,NewFrames);
+frame_paint_offset_aligned({_,YRef}=Point,[{centered_vertically,MidY}|R],Frames) ->
+    NewFrames = lists:map(
+		  fun(#frame{bitmap = BitMap} = Frame) ->
+			  Height = wxBitmap:getHeight(BitMap),
+			  Diff = round(MidY - (YRef + Height/2)),
+			  Frame#frame{y_paint_offset = Diff}
+		  end,Frames),
     frame_paint_offset_aligned(Point,R,NewFrames).
+
 			  
 
 -spec(resize_keep_ratio(enlarge,{factor,integer()},[#frame{}]) -> ok).
