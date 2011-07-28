@@ -158,20 +158,14 @@ resize_sprites_test_() ->
 
 	     sprite_lib:resize_keep_ratio(enlarge,{factor,3},Frames),
 
-	     PointX = 50,
-	     PointY = 0,
-	     ReferencePoint = {PointX,PointY},
+	     ReferencePoint = {50,150},
 	     Adjusted = sprite_lib:frame_paint_offset_aligned(ReferencePoint,
 							      [{bottom,180},
-							       {centered_horizontally,PointX}],
+							       {centered_horizontally,100}],
 							      Frames),
 	     lists:foreach(
 	       fun(Frame) ->
-		       #frame{bitmap = BitMap,
-			      x_paint_offset = XpO,
-			      y_paint_offset = YpO} = Frame,
-		       NewPoint = {PointX + XpO, PointY+YpO},
-				     paint_screen:add_to_paint_screen(1,coming_in,NewPoint,BitMap),
+		       paint_screen:add_to_paint_screen(1,coming_in,ReferencePoint,Frame),
 		       timer:sleep(80)
 	       end,Adjusted),
 	     timer:sleep(4000),
