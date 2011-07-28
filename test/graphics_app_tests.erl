@@ -173,7 +173,6 @@ rotate_fixed_frames_test_() ->
      fun() ->
 	     %% 	     Rotate + Enlarge works fine --- not the other way
 	     %% 	     Don't know why :|
-
 	     start_graphics("Rotate + Resize || Sequence <------> Fixed",{400,150},{0,0},10),
 	     Path = filename:join([code:priv_dir(graphics),"Misc","megaman_alpha.png"]),
 	     
@@ -195,7 +194,7 @@ rotate_fixed_frames_test_() ->
 		       #frame{bitmap = BitMap_2} = FixedFrame,
 		       paint_screen:add_to_paint_screen(1,fixed,Point,BitMap),
 		       paint_screen:add_to_paint_screen(1,fixedtwo,Point_2,BitMap_2),
-		       timer:sleep(300)
+		       timer:sleep(80)
 	       end,lists:zip(Sequence,Fixed)),
 	     
 	     timer:sleep(2000),
